@@ -11,6 +11,3 @@ pytest.ini
 
 # IDE
 .idea
-
-# env
-.env.test
