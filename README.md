@@ -6,6 +6,12 @@ Tezos boilerplate : Pascal LiGo + PyTezos
 Prerequisites
 ---
 
+### Ligo
+
+```bash
+curl https://gitlab.com/ligolang/ligo/raw/dev/scripts/installer.sh | bash -s "next"
+```
+
 ### Python 3.6+
 
 Create Python virtual environment
