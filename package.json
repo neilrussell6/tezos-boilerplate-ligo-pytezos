@@ -1,0 +1,36 @@
+{
+  "name": "tezos-boilerplate-ligo-pytezos",
+  "version": "0.1.0",
+  "description": "Boilerplate for developing Tezos smart contracts with Pascal Ligo and testing them with PyTezos",
+  "scripts": {
+    "_python:dep:init": "pip install --upgrade pip && pip install pip-tools",
+    "python:dep:compile": "pip-compile requirements.in",
+    "python:dep:install": "pip install -r requirements.txt",
+    "_python:init:files": "cp pytest.ini.tpl pytest.ini",
+    "python:init": "npm-run-all _python:init:files _python:dep:init python:dep:compile python:dep:install",
+    "_init:files": "cp .env.test.tpl .env.test",
+    "init": "npm-run-all _init:files python:init",
+    "lint": "flake8 ./src",
+    "lint:fix": "isort -rc ./src",
+    "compile": "bash ./scripts/ligo.sh compile",
+    "compile:all": "bash ./scripts/ligo.sh compile_all \"./src/contracts\"",
+    "compile:all:watch": "bash ./scripts/ligo.sh compile_all_watch \"./src/contracts\"",
+    "test": "py.test -v",
+    "test:watch": "ptw",
+    "_git:pre-commit": "npm-run-all lint compile:all test",
+    "_git:pre-push": "npm-run-all lint compile:all test"
+  },
+  "keywords": [],
+  "author": "Neil Russell <neilrussell6@gmail.com>",
+  "license": "ISC",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run _git:pre-commit",
+      "pre-push": "npm run _git:pre-push"
+    }
+  },
+  "devDependencies": {
+    "husky": "^4.0.6",
+    "npm-run-all": "^4.1.5"
+  }
+}

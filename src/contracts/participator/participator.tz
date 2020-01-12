@@ -1,0 +1,85 @@
+{ parameter
+    (or (pair %addParticipant (address %address) (string %name)) (unit %participate)) ;
+  storage
+    (pair (address %owner)
+          (big_map %participants address (pair (mutez %balance) (string %name)))) ;
+  code { DUP ;
+         CDR ;
+         DIP { DUP } ;
+         SWAP ;
+         CAR ;
+         IF_LEFT
+           { DUP ;
+             DIP { DIP { DUP } ; SWAP } ;
+             PAIR ;
+             DUP ;
+             CAR ;
+             DIP { DUP } ;
+             SWAP ;
+             CDR ;
+             DUP ;
+             CAR ;
+             SENDER ;
+             COMPARE ;
+             NEQ ;
+             IF { PUSH string "ERROR_ONLY_OWNER_CAN_ADD_PARTICIPANT" ; FAILWITH }
+                { DIP { DUP } ;
+                  SWAP ;
+                  CAR ;
+                  DIP { DUP ; CDR } ;
+                  GET ;
+                  IF_NONE
+                    { DIP { DUP } ;
+                      SWAP ;
+                      CAR ;
+                      DIP { DIP { DUP } ;
+                            SWAP ;
+                            CDR ;
+                            AMOUNT ;
+                            PAIR ;
+                            SOME ;
+                            DIP { DUP ; CDR } } ;
+                      UPDATE ;
+                      DIP { DUP ; CAR } ;
+                      SWAP ;
+                      PAIR ;
+                      DIP { DROP } ;
+                      PUSH unit Unit }
+                    { PUSH string "ERROR_CANNOT_ADD_DUPLICATE_PARTICIPANT" ; FAILWITH } } ;
+             DROP ;
+             DUP ;
+             DIP { DROP 4 } }
+           { DIP { DUP } ;
+             SWAP ;
+             DUP ;
+             CDR ;
+             SENDER ;
+             GET ;
+             IF_NONE
+               { PUSH string "ERROR_ONLY_REGISTERED_PARTICIPANTS_CAN_PARTICIPATE" ;
+                 FAILWITH }
+               { DUP ;
+                 CAR ;
+                 AMOUNT ;
+                 ADD ;
+                 DIP { DUP ; CDR } ;
+                 PAIR ;
+                 DIP { DROP } ;
+                 DUP ;
+                 SOME ;
+                 DIP { DIP { DUP } ; SWAP ; CDR } ;
+                 SENDER ;
+                 UPDATE ;
+                 DIP { DIP { DUP } ; SWAP ; CAR } ;
+                 SWAP ;
+                 PAIR ;
+                 SWAP ;
+                 DROP ;
+                 DIP { DROP } ;
+                 PUSH unit Unit } ;
+             DROP ;
+             DUP ;
+             DIP { DROP 2 } } ;
+         NIL operation ;
+         PAIR ;
+         DIP { DROP 2 } } }

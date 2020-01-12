@@ -1,0 +1,16 @@
+# Python
+__pycache__
+venv
+
+# Python : testing
+pytest.ini
+.pytest_cache
+
+# Node
+/node_modules
+
+# IDE
+.idea
+
+# env
+.env.test
